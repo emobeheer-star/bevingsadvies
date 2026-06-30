@@ -159,7 +159,10 @@ REGEL 7 — STUCLOPER
   * Bij plafondherstel: het GEHELE vloeroppervlak van de ruimte (in m2). Bij een schuin dakvlak
     de oppervlakte van dat dakvlak.
   * Als in dezelfde ruimte zowel wand- als plafondherstel met stuc/spackwerk voorkomt, geldt
-    het vloeroppervlak van de ruimte als totaal (niet optellen).
+    ALTIJD de plafondberekening: het gehele vloeroppervlak in m2. Dit is de maximale waarde en
+    er wordt nooit opgeteld.
+  * Het totale gecalculeerde aantal stucloper mag in geen enkel geval hoger zijn dan het
+    vloeroppervlak van de ruimte in m2 — dit is het absolute maximum, ook bij alleen wandherstel.
 - Fout = stucwerk/spackwerk/sierpleister gecalculeerd zonder stucloper-post. Ook fout: stucloper
   gecalculeerd bij een schade die alleen sauswerk betreft (zonder stuc/spack/sierpleister) — let
   op: meld dit tweede geval NOOIT, want dat zou in het nadeel van de aanvrager zijn (zie het
