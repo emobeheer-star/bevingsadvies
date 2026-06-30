@@ -1,6 +1,13 @@
-import { sql } from '@vercel/postgres';
+import { neon } from '@neondatabase/serverless';
 
-async function initSchema() {
+function getDb() {
+  const url = process.env.DATABASE_URL;
+  if (!url) throw new Error('DATABASE_URL is niet ingesteld');
+  return neon(url);
+}
+
+async function ensureSchema() {
+  const sql = getDb();
   await sql`
     CREATE TABLE IF NOT EXISTS eenheidsprijzen (
       id SERIAL PRIMARY KEY,
@@ -23,16 +30,17 @@ async function initSchema() {
 }
 
 let schemaInitialized = false;
-async function ensureSchema() {
+async function init() {
   if (!schemaInitialized) {
-    await initSchema();
+    await ensureSchema();
     schemaInitialized = true;
   }
 }
 
 export async function getPrijzengeheugen(): Promise<Record<string, number>> {
-  await ensureSchema();
-  const { rows } = await sql`SELECT post_omschrijving, prijs_per_eenheid FROM eenheidsprijzen`;
+  await init();
+  const sql = getDb();
+  const rows = await sql`SELECT post_omschrijving, prijs_per_eenheid FROM eenheidsprijzen`;
   const result: Record<string, number> = {};
   for (const row of rows) {
     result[row.post_omschrijving as string] = Number(row.prijs_per_eenheid);
@@ -41,7 +49,8 @@ export async function getPrijzengeheugen(): Promise<Record<string, number>> {
 }
 
 export async function slaEenheidsprijzenOp(prijzen: Record<string, number>, dossierDatum: string) {
-  await ensureSchema();
+  await init();
+  const sql = getDb();
   for (const [omschrijving, prijs] of Object.entries(prijzen)) {
     await sql`
       INSERT INTO eenheidsprijzen (post_omschrijving, prijs_per_eenheid, dossier_datum)
@@ -55,7 +64,8 @@ export async function slaEenheidsprijzenOp(prijzen: Record<string, number>, doss
 }
 
 export async function slaAnalyseOp(id: string, bestandsnaam: string, resultaatJson: string) {
-  await ensureSchema();
+  await init();
+  const sql = getDb();
   await sql`
     INSERT INTO analyses (id, bestandsnaam, resultaat_json)
     VALUES (${id}, ${bestandsnaam}, ${resultaatJson})
@@ -63,8 +73,9 @@ export async function slaAnalyseOp(id: string, bestandsnaam: string, resultaatJs
 }
 
 export async function getAnalyse(id: string): Promise<{ resultaat_json: string; betaald: boolean; upsell_gekozen: string | null } | null> {
-  await ensureSchema();
-  const { rows } = await sql`SELECT resultaat_json, betaald, upsell_gekozen FROM analyses WHERE id = ${id}`;
+  await init();
+  const sql = getDb();
+  const rows = await sql`SELECT resultaat_json, betaald, upsell_gekozen FROM analyses WHERE id = ${id}`;
   if (rows.length === 0) return null;
   return {
     resultaat_json: rows[0].resultaat_json as string,
@@ -74,11 +85,13 @@ export async function getAnalyse(id: string): Promise<{ resultaat_json: string; 
 }
 
 export async function markeerBetaald(id: string) {
-  await ensureSchema();
+  await init();
+  const sql = getDb();
   await sql`UPDATE analyses SET betaald = TRUE WHERE id = ${id}`;
 }
 
 export async function slaUpsellOp(id: string, upsell: string) {
-  await ensureSchema();
+  await init();
+  const sql = getDb();
   await sql`UPDATE analyses SET upsell_gekozen = ${upsell} WHERE id = ${id}`;
 }
