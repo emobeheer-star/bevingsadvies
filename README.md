@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BevingsAdvies Groningen
 
-## Getting Started
+Onafhankelijke AI-tool voor het controleren van adviesrapporten aardbevingsschade in Groningen.
 
-First, run the development server:
+## Lokaal starten
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000 in uw browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Vul `.env.local` in met de volgende waarden:
 
-## Learn More
+| Variabele | Beschrijving |
+|-----------|-------------|
+| `ANTHROPIC_API_KEY` | Uw Anthropic API key (haal op via console.anthropic.com) |
+| `STRIPE_SECRET_KEY` | Stripe secret key (test: `sk_test_...`, productie: `sk_live_...`) |
+| `STRIPE_WEBHOOK_SECRET` | Webhook signing secret van uw Stripe webhook endpoint |
+| `NEXT_PUBLIC_BASE_URL` | Optioneel: basis-URL voor payment redirects |
 
-To learn more about Next.js, take a look at the following resources:
+## Testen zonder betaling
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Upload een PDF met het query-parameter `?test=true` om de betaalwall over te slaan:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+http://localhost:3000/?test=true
+```
 
-## Deploy on Vercel
+Na de analyse wordt u automatisch doorgestuurd naar het volledige rapport zonder betaling.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Nieuwe regels toevoegen
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+De volledige regelset staat in `lib/herstelregels.ts` als de constante `SYSTEEM_PROMPT`.
+
+1. Voeg de nieuwe regel toe aan de prompt-tekst in `SYSTEEM_PROMPT`
+2. Voeg eventueel een nieuwe categorie toe aan het `categorieen` array in de JSON-instructie onderaan de prompt
+3. Voeg dezelfde categorienaam toe in `app/page.tsx` (de `CONTROLE_TEGELS` array en de categorieweergave in het resultaatscherm)
+
+## Database
+
+SQLite voor lokale ontwikkeling, opgeslagen in `data/bevingsadvies.db` (wordt automatisch aangemaakt).
+
+Voor productie: migreer naar Postgres door `better-sqlite3` te vervangen door `@neondatabase/serverless` of `pg`. De SQL-schema's zijn standaard compatible.
+
+## Deployment
+
+Voor Vercel:
+1. Voeg de environment variables toe via het Vercel dashboard
+2. Gebruik Vercel Postgres of Neon voor de database (vervang better-sqlite3)
+3. Configureer de Stripe webhook URL naar `https://uwdomein.nl/api/webhook`
