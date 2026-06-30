@@ -15,7 +15,7 @@ export interface Schade {
   fouten: Fout[];
 }
 
-export interface KriekeBevinding {
+export interface KritiekeBevinding {
   titel: string;
   uitleg: string;
   regel: string;
@@ -32,6 +32,6 @@ export interface AnalyseResultaat {
   totale_gemiste_vergoeding: number | null;
   gevonden_eenheidsprijzen: Record<string, number>;
   categorieen: Categorie[];
-  kritieke_bevindingen: KriekeBevinding[];
+  kritieke_bevindingen: KritiekeBevinding[];
   schades: Schade[];
 }
