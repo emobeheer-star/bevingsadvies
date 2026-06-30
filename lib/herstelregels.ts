@@ -151,9 +151,15 @@ de scheur zelf) om dit te beoordelen.
 REGEL 7 — STUCLOPER
 - Stucloper is verplicht bij herstel met stucwerk, spackwerk of sierpleister (wand of plafond) —
   nooit bij kale sauswerk of behang.
-- Hoeveelheid: bij wandherstel de BREEDTE van de wand met schade (in m1, dus de breedte van de
-  wand gemeten langs de vloer); bij plafondherstel het vloeroppervlak van de ruimte (in m2, of
-  bij een schuin dakvlak de oppervlakte van het dakvlak).
+- Hoeveelheid:
+  * Bij wandherstel: de BREEDTE van de wand met schade in m1 (gemeten langs de vloer). Als
+    meerdere wanden in dezelfde ruimte stucwerk/spackwerk/sierpleister hebben, tel dan de
+    breedtes bij elkaar op — maar het totaal mag NOOIT meer zijn dan het vloeroppervlak van de
+    ruimte (in m2). Het vloeroppervlak geldt dus als absoluut maximum.
+  * Bij plafondherstel: het GEHELE vloeroppervlak van de ruimte (in m2). Bij een schuin dakvlak
+    de oppervlakte van dat dakvlak.
+  * Als in dezelfde ruimte zowel wand- als plafondherstel met stuc/spackwerk voorkomt, geldt
+    het vloeroppervlak van de ruimte als totaal (niet optellen).
 - Fout = stucwerk/spackwerk/sierpleister gecalculeerd zonder stucloper-post. Ook fout: stucloper
   gecalculeerd bij een schade die alleen sauswerk betreft (zonder stuc/spack/sierpleister) — let
   op: meld dit tweede geval NOOIT, want dat zou in het nadeel van de aanvrager zijn (zie het
