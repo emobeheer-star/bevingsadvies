@@ -1,4 +1,16 @@
 import { NextRequest } from 'next/server';
+
+export const maxDuration = 300;
+export const dynamic = 'force-dynamic';
+
+// Vercel body size limit voor deze route
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '50mb',
+    },
+  },
+};
 import Anthropic from '@anthropic-ai/sdk';
 import { v4 as uuidv4 } from 'uuid';
 import { SYSTEEM_PROMPT, CHUNK_DREMPEL, MAX_CHUNK_GROOTTE, CHUNK_OVERLAP } from '@/lib/herstelregels';
