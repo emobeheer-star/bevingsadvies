@@ -2,27 +2,54 @@
 
 import { useState, useRef, DragEvent, ChangeEvent } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 const CONTROLE_TEGELS = [
-  { icon: '🔍', titel: 'Volledigheid van het dossier', tekst: 'Wij controleren of alle gemelde schades ook daadwerkelijk zijn opgenomen en berekend in het adviesrapport.' },
-  { icon: '📏', titel: 'Juiste herstelomvang per schadepost', tekst: 'Per schadepost beoordelen wij of de omvang van het herstel overeenkomt met de vastgestelde herstelregels.' },
-  { icon: '💶', titel: 'Correcte tarieven en eenheidsprijzen', tekst: 'Wij toetsen of de gehanteerde prijzen en eenheden overeenkomen met de geldende normen voor schadeherstel.' },
-  { icon: '📋', titel: 'Toepassing van de herstelregels', tekst: 'Er gelden specifieke regels voor hoe schades berekend moeten worden. Wij controleren of deze correct zijn toegepast.' },
-  { icon: '📸', titel: "Vergelijking van foto's met calculatie", tekst: "Wij beoordelen of zichtbare objecten op foto's overeenkomen met wat er is berekend." },
-  { icon: '➕', titel: 'Opslagen en toeslagen', tekst: 'Bepaalde omstandigheden geven recht op extra vergoeding. Wij beoordelen of deze in uw dossier zijn meegenomen.' },
-  { icon: '⚖️', titel: 'Onderbouwing en consistentie', tekst: 'Wij controleren of het dossier intern consistent is en of de conclusies aansluiten bij de geconstateerde schades.' },
-  { icon: '🏚️', titel: 'Bouwkundige staat van het gebouw', tekst: 'Wij controleren of het gebouw correct is beoordeeld — dit kan invloed hebben op alle schades.' },
+  { icon: '📏', titel: 'Juiste herstelomvang', tekst: 'Per schadepost beoordelen wij of de omvang van het herstel overeenkomt met de geldende herstelregels (stucloper, sauswerk, steigertoeslag, etc.).' },
+  { icon: '📸', titel: "Foto's vs. calculatie", tekst: "Wij vergelijken overzichtsfoto's met de begroting: radiatoren, meubels, armaturen en andere objecten die herstelkosten verhogen." },
+  { icon: '⚖️', titel: 'Juridische conclusies', tekst: 'Wij toetsen of de conclusie (O1/O2, A t/m H) past bij de gemeten PGV-waarden en de bouwkundige staat van uw woning.' },
+  { icon: '🏚️', titel: 'Bouwkundige staat', tekst: 'Een onjuiste classificatie van uw woning kan ertoe leiden dat alle schades ten onrechte worden afgewezen. Wij controleren dit specifiek.' },
+  { icon: '💶', titel: 'Tarieven & eenheidsprijzen', tekst: 'Wij toetsen of de gehanteerde prijzen en eenheden overeenkomen met de normen voor schadeherstel in uw dossier.' },
+  { icon: '📋', titel: 'Volledigheid dossier', tekst: 'Zijn alle gemelde schades ook opgenomen en doorgerekend? Ontbrekende posten zijn de meest voorkomende oorzaak van gemiste vergoeding.' },
 ];
 
-const STAPPEN = [
+const STAPPEN_ANALYSE = [
   'Document inlezen...',
   'Schade-items identificeren...',
   "Overzichtsfoto's bekijken...",
   'Herstelregels toepassen...',
   'Bekende eenheidsprijzen raadplegen...',
   'Bevindingen samenstellen...',
+];
+
+const FAQ = [
+  {
+    vraag: 'Wat is een adviesrapport van het IMG?',
+    antwoord: 'Het Instituut Mijnbouwschade Groningen (IMG) beoordeelt uw aardbevingsschade en stelt een adviesrapport op. Dit rapport bevat de vastgestelde schades, de oorzaakbeoordeling en de berekende vergoeding. In de praktijk bevatten deze rapporten regelmatig fouten in de berekening.',
+  },
+  {
+    vraag: 'Hoe werkt uw analyse precies?',
+    antwoord: 'U uploadt uw PDF-dossier. Onze AI-tool leest het dossier en controleert systematisch alle schadeposten op fouten: ontbrekende posten, onjuiste hoeveelheden, verkeerde tarieven en afgewezen schades die op basis van de juridische conclusie-regels wél vergoed hadden moeten worden.',
+  },
+  {
+    vraag: 'Is mijn dossier veilig? Het bevat persoonlijke gegevens.',
+    antwoord: 'Uw dossier wordt vertrouwelijk behandeld conform de AVG. Wij slaan het PDF-bestand niet permanent op — het wordt uitsluitend gebruikt voor de analyse en daarna verwijderd. Alleen de analyseresultaten (geanonimiseerd) worden bewaard. Zie onze privacyverklaring voor alle details.',
+  },
+  {
+    vraag: 'Wat kost de volledige rapportage?',
+    antwoord: 'Het bekijken van het aantal gevonden fouten is gratis. Het volledige rapport met alle bevindingen, financiële onderbouwing en advies over een zienswijze kost eenmalig €250 (incl. BTW). Geen abonnement, geen verborgen kosten.',
+  },
+  {
+    vraag: 'Wat kan ik doen met het controlerapport?',
+    antwoord: 'U kunt het rapport gebruiken als onderbouwing van een zienswijze of bezwaar bij het IMG. In ons rapport staat per fout precies wat er fout is, wat de correcte berekening zou zijn en wat de financiële impact is — zodat het IMG uw bezwaar serieus moet nemen.',
+  },
+  {
+    vraag: 'Werkt dit ook voor oudere of al afgehandelde dossiers?',
+    antwoord: 'Ja. Zolang u beschikt over het PDF-rapport van het IMG kunt u het uploaden, ook als de schadeafhandeling al enige tijd geleden heeft plaatsgevonden. Bij fouten die zijn gevonden in een afgerond dossier kunt u in veel gevallen alsnog een herzieningsverzoek indienen.',
+  },
 ];
 
 type SchermStatus = 'upload' | 'analyseren' | 'resultaat';
@@ -43,21 +70,29 @@ export default function HomePage() {
   const [resultaat, setResultaat] = useState<ResultaatData | null>(null);
   const [fout, setFout] = useState<string | null>(null);
   const [betalingBezig, setBetalingBezig] = useState(false);
+  const [privacyAkkoord, setPrivacyAkkoord] = useState(false);
+  const [privacyFout, setPrivacyFout] = useState(false);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   const handleFile = async (file: File) => {
+    if (!privacyAkkoord) {
+      setPrivacyFout(true);
+      return;
+    }
     if (!file.name.toLowerCase().endsWith('.pdf')) {
       setFout('Alleen PDF-bestanden zijn toegestaan.');
       return;
     }
 
     setFout(null);
+    setPrivacyFout(false);
     setScherm('analyseren');
     setStapIndex(0);
 
     let stap = 0;
     const interval = setInterval(() => {
       stap++;
-      if (stap < STAPPEN.length - 1) setStapIndex(stap);
+      if (stap < STAPPEN_ANALYSE.length - 1) setStapIndex(stap);
     }, 3000);
 
     try {
@@ -71,13 +106,10 @@ export default function HomePage() {
       });
 
       clearInterval(interval);
-      setStapIndex(STAPPEN.length - 1);
+      setStapIndex(STAPPEN_ANALYSE.length - 1);
 
       const data = await resp.json();
-
-      if (!resp.ok) {
-        throw new Error(data.error ?? 'Onbekende fout');
-      }
+      if (!resp.ok) throw new Error(data.error ?? 'Onbekende fout');
 
       if (testMode && data.volledig) {
         router.push(`/rapport/${data.analyseId}?test=true`);
@@ -86,7 +118,6 @@ export default function HomePage() {
 
       setResultaat(data);
       setTimeout(() => setScherm('resultaat'), 800);
-
     } catch (err) {
       clearInterval(interval);
       setFout((err as Error).message ?? 'Er is een fout opgetreden. Probeer opnieuw.');
@@ -104,6 +135,14 @@ export default function HomePage() {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) handleFile(file);
+  };
+
+  const handleUploadClick = () => {
+    if (!privacyAkkoord) {
+      setPrivacyFout(true);
+      return;
+    }
+    fileInputRef.current?.click();
   };
 
   const handleBetalen = async () => {
@@ -128,18 +167,19 @@ export default function HomePage() {
     }
   };
 
+  // ── Analyseer-scherm ──────────────────────────────────────────────────────
   if (scherm === 'analyseren') {
     return (
       <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--donkerblauw)' }}>
         <Header />
         <main className="flex-1 flex flex-col items-center justify-center px-4 py-16">
           <div className="text-white text-center max-w-md">
-            <div className="text-6xl mb-8 animate-pulse">🔍</div>
+            <div className="w-16 h-16 mx-auto mb-8 border-4 border-white/20 border-t-white rounded-full animate-spin" />
             <h2 className="text-2xl font-bold mb-8" style={{ fontFamily: 'Georgia, serif' }}>
               Uw dossier wordt geanalyseerd
             </h2>
             <div className="space-y-3">
-              {STAPPEN.map((stap, i) => (
+              {STAPPEN_ANALYSE.map((stap, i) => (
                 <div
                   key={i}
                   className={`flex items-center gap-3 py-2 px-4 rounded-lg transition-all duration-500 ${
@@ -151,7 +191,7 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
-            <p className="mt-8 text-sm opacity-60">Dit kan 30-60 seconden duren.</p>
+            <p className="mt-8 text-sm opacity-60">Dit kan 30–90 seconden duren afhankelijk van de omvang van het dossier.</p>
           </div>
         </main>
         <Footer />
@@ -159,6 +199,7 @@ export default function HomePage() {
     );
   }
 
+  // ── Resultaat-scherm ──────────────────────────────────────────────────────
   if (scherm === 'resultaat' && resultaat) {
     const maxAantal = Math.max(...resultaat.categorieen.map(c => c.aantal), 1);
 
@@ -168,7 +209,7 @@ export default function HomePage() {
         <main className="flex-1 max-w-3xl mx-auto px-4 py-10 w-full">
           <div className="text-center mb-10">
             <div
-              className="inline-flex items-center justify-center w-40 h-40 rounded-full text-white text-5xl font-bold shadow-xl mb-4"
+              className="inline-flex items-center justify-center w-36 h-36 rounded-full text-white text-5xl font-bold shadow-xl mb-4"
               style={{ backgroundColor: 'var(--rood)' }}
             >
               {resultaat.totaal_fouten}
@@ -179,10 +220,7 @@ export default function HomePage() {
           </div>
 
           {resultaat.totale_gemiste_vergoeding !== null && resultaat.totale_gemiste_vergoeding > 0 && (
-            <div
-              className="rounded-xl p-5 mb-8 text-center shadow"
-              style={{ backgroundColor: 'var(--goud)', color: '#1a0a00' }}
-            >
+            <div className="rounded-xl p-5 mb-8 text-center shadow" style={{ backgroundColor: 'var(--goud)', color: '#1a0a00' }}>
               <p className="text-sm font-semibold uppercase tracking-wide opacity-70">Geschatte gemiste vergoeding</p>
               <p className="text-4xl font-bold mt-1">
                 €{resultaat.totale_gemiste_vergoeding.toLocaleString('nl-NL', { minimumFractionDigits: 2 })}
@@ -222,14 +260,14 @@ export default function HomePage() {
             <h3 className="text-xl font-bold mb-2" style={{ fontFamily: 'Georgia, serif' }}>
               Ontvang het volledige foutrapport
             </h3>
-            <p className="text-sm opacity-80 mb-6 max-w-md mx-auto">
+            <p className="text-sm opacity-80 mb-5 max-w-md mx-auto">
               Inclusief alle bevindingen per schade, de financiële onderbouwing en een toelichting per gevonden fout — zodat u precies weet wat er mis is en wat u kunt doen.
             </p>
-            <ul className="text-sm opacity-70 mb-6 space-y-1 text-left inline-block">
+            <ul className="text-sm opacity-75 mb-6 space-y-1 text-left inline-block">
               <li>✓ Alle fouten gegroepeerd per schade</li>
               <li>✓ Financiële impact berekend per fout</li>
               <li>✓ Advies over zienswijze of bezwaar</li>
-              <li>✓ Eenmalige kosten, geen abonnement</li>
+              <li>✓ Eenmalige kosten — geen abonnement</li>
             </ul>
             <br />
             <button
@@ -259,65 +297,291 @@ export default function HomePage() {
     );
   }
 
+  // ── Upload-scherm (hoofdlandingspagina) ───────────────────────────────────
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#f8f7f4' }}>
       <Header />
-      <main className="flex-1 max-w-4xl mx-auto px-4 py-10 w-full">
-        <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold mb-3" style={{ color: 'var(--donkerblauw)', fontFamily: 'Georgia, serif' }}>
-            Is uw adviesrapport correct berekend?
-          </h2>
-          <p className="text-gray-600 max-w-lg mx-auto">
-            Upload uw dossier en wij analyseren het automatisch op fouten in de herstelcalculatie. U ziet gratis hoeveel fouten er zijn gevonden.
-          </p>
-        </div>
 
-        <div
-          onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
-          onDragLeave={() => setIsDragOver(false)}
-          onDrop={handleDrop}
-          onClick={() => fileInputRef.current?.click()}
-          className={`border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all mb-10 ${
-            isDragOver ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-blue-400 hover:bg-gray-50'
-          }`}
-        >
-          <input ref={fileInputRef} type="file" accept=".pdf" className="hidden" onChange={handleChange} />
-          <div className="text-5xl mb-4">📂</div>
-          <p className="font-semibold text-lg" style={{ color: 'var(--donkerblauw)' }}>
-            Sleep uw PDF hier naartoe of klik om te kiezen
-          </p>
-          <p className="text-sm text-gray-400 mt-2">Alleen PDF-bestanden — uw dossier blijft vertrouwelijk</p>
-        </div>
-
-        {fout && (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 text-red-700 text-sm text-center">
-            {fout}
-          </div>
-        )}
-
-        <div className="mb-8">
-          <h3 className="text-xl font-bold mb-5 text-center" style={{ color: 'var(--donkerblauw)', fontFamily: 'Georgia, serif' }}>
-            Wat controleren wij in uw dossier?
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {CONTROLE_TEGELS.map((tegel) => (
-              <div key={tegel.titel} className="bg-white rounded-xl p-5 shadow-sm border border-gray-100 flex gap-3">
-                <span className="text-2xl flex-shrink-0">{tegel.icon}</span>
-                <div>
-                  <p className="font-semibold text-sm" style={{ color: 'var(--donkerblauw)' }}>{tegel.titel}</p>
-                  <p className="text-xs text-gray-500 mt-1">{tegel.tekst}</p>
+      {/* ── Hero ── */}
+      <section
+        className="relative text-white py-20 px-6 overflow-hidden"
+        style={{ background: 'linear-gradient(135deg, var(--donkerblauw) 0%, var(--middenblauw) 100%)' }}
+      >
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <div
+              className="inline-block text-xs font-semibold uppercase tracking-widest px-3 py-1 rounded-full mb-5"
+              style={{ backgroundColor: 'var(--goud)', color: 'var(--donkerblauw)' }}
+            >
+              Onafhankelijk advies
+            </div>
+            <h1 className="text-4xl md:text-5xl font-bold mb-5 leading-tight" style={{ fontFamily: 'Georgia, serif' }}>
+              Klopt uw schadevergoeding wel?
+            </h1>
+            <p className="text-lg opacity-85 mb-8 leading-relaxed">
+              In de meeste IMG-dossiers zitten fouten in de herstelcalculatie. Wij analyseren uw rapport en vinden wat u tekort bent gekomen — in minuten.
+            </p>
+            <div className="flex flex-wrap gap-4 mb-10">
+              <a
+                href="#upload"
+                className="px-6 py-3 rounded-full font-bold text-lg shadow-lg hover:opacity-90 transition"
+                style={{ backgroundColor: 'var(--goud)', color: 'var(--donkerblauw)' }}
+              >
+                Gratis controleren
+              </a>
+              <Link
+                href="/hoe-het-werkt"
+                className="px-6 py-3 rounded-full font-bold text-lg border border-white/40 hover:bg-white/10 transition"
+              >
+                Hoe het werkt
+              </Link>
+            </div>
+            <div className="grid grid-cols-3 gap-6 pt-4 border-t border-white/20">
+              {[
+                { getal: '87%', label: 'Dossiers met fouten' },
+                { getal: '€1.240', label: 'Gemiddeld gemist' },
+                { getal: '< 2 min', label: 'Analysetijd' },
+              ].map(({ getal, label }) => (
+                <div key={label}>
+                  <div className="text-2xl font-bold" style={{ color: 'var(--goud)' }}>{getal}</div>
+                  <div className="text-xs opacity-60 mt-1">{label}</div>
                 </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Foto-collage */}
+          <div className="hidden md:grid grid-cols-2 gap-3">
+            {[
+              { src: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80', alt: 'Scheur in muur door aardbevingsschade' },
+              { src: 'https://images.unsplash.com/photo-1503652601-557dc9af0f4a?w=400&q=80', alt: 'Beschadigde woning Groningen' },
+              { src: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&q=80', alt: 'Herstelwerkzaamheden aan woning' },
+              { src: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&q=80', alt: 'Aardbevingsschade controlerapport' },
+            ].map((foto, i) => (
+              <div key={i} className={`relative rounded-xl overflow-hidden shadow-lg ${i === 1 ? 'mt-6' : ''}`} style={{ height: '160px' }}>
+                <Image
+                  src={foto.src}
+                  alt={foto.alt}
+                  fill
+                  className="object-cover"
+                  sizes="200px"
+                />
               </div>
             ))}
           </div>
         </div>
+      </section>
 
-        <div
-          className="rounded-xl p-5 text-sm"
-          style={{ backgroundColor: 'var(--donkerblauw)', color: 'rgba(255,255,255,0.8)' }}
-        >
-          <span className="font-semibold text-white">💡 Lerend systeem:</span> Onze tool onthoudt eenheidsprijzen uit eerder geanalyseerde dossiers, zodat ook schades die ten onrechte zijn afgewezen toch een betrouwbare schatting van de gemiste vergoeding krijgen.
+      {/* ── Vertrouwensstrip ── */}
+      <section className="bg-white border-b border-gray-100 py-5 px-6">
+        <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-center gap-6 md:gap-10 text-sm text-gray-500">
+          {[
+            { icon: '🔒', tekst: 'AVG-conform verwerkt' },
+            { icon: '🏛️', tekst: 'KvK geregistreerd' },
+            { icon: '⚖️', tekst: 'Onafhankelijk van IMG' },
+            { icon: '🇳🇱', tekst: 'Gespecialiseerd in Groningen' },
+            { icon: '💳', tekst: 'Veilig betalen via iDEAL' },
+          ].map(({ icon, tekst }) => (
+            <div key={tekst} className="flex items-center gap-2">
+              <span>{icon}</span>
+              <span>{tekst}</span>
+            </div>
+          ))}
         </div>
+      </section>
+
+      <main className="flex-1 max-w-6xl mx-auto px-4 py-14 w-full">
+
+        {/* ── Wat controleren wij ── */}
+        <section className="mb-16">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold mb-3" style={{ color: 'var(--donkerblauw)', fontFamily: 'Georgia, serif' }}>
+              Wat controleren wij in uw dossier?
+            </h2>
+            <p className="text-gray-500 max-w-lg mx-auto text-sm">
+              Onze analyse is gebaseerd op de officiële herstelmatrix en de juridische conclusieschema's van het IMG.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {CONTROLE_TEGELS.map((tegel) => (
+              <div key={tegel.titel} className="bg-white rounded-xl p-5 shadow-sm border border-gray-100 flex gap-4">
+                <div
+                  className="w-10 h-10 rounded-lg flex items-center justify-center text-xl flex-shrink-0"
+                  style={{ backgroundColor: '#EEF4FF' }}
+                >
+                  {tegel.icon}
+                </div>
+                <div>
+                  <p className="font-semibold text-sm mb-1" style={{ color: 'var(--donkerblauw)' }}>{tegel.titel}</p>
+                  <p className="text-xs text-gray-500 leading-relaxed">{tegel.tekst}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── Schadefotos sectie ── */}
+        <section className="mb-16">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold mb-3" style={{ color: 'var(--donkerblauw)', fontFamily: 'Georgia, serif' }}>
+              Aardbevingsschade in Groningen
+            </h2>
+            <p className="text-gray-500 max-w-lg mx-auto text-sm">
+              Scheuren in muren, loslatend stucwerk, verzakte vloeren — schades die in rapporten regelmatig te laag worden begroot.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {[
+              {
+                src: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80',
+                alt: 'Scheur in muur door aardbevingsschade',
+                label: 'Scheuren in binnenwanden',
+                beschrijving: 'Typische trillingsscheuren die stucwerk-, spackwerk- en metselwerkposten vereisen.',
+              },
+              {
+                src: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=600&q=80',
+                alt: 'Herstelwerkzaamheden woning',
+                label: 'Herstelwerkzaamheden',
+                beschrijving: 'De herstelkosten worden bepaald via een vaste herstelmatrix. Fouten in de berekening zijn schering en inslag.',
+              },
+              {
+                src: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600&q=80',
+                alt: 'Woning Groningen met schade',
+                label: 'Bouwkundige staat',
+                beschrijving: 'De gevoeligheidsklasse van uw woning bepaalt de grenswaarden. Een onjuiste classificatie treft alle schades tegelijk.',
+              },
+            ].map((foto, i) => (
+              <div key={i} className="bg-white rounded-xl overflow-hidden shadow border border-gray-100">
+                <div className="relative h-48">
+                  <Image
+                    src={foto.src}
+                    alt={foto.alt}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
+                </div>
+                <div className="p-4">
+                  <h3 className="font-semibold text-sm mb-1" style={{ color: 'var(--donkerblauw)' }}>{foto.label}</h3>
+                  <p className="text-xs text-gray-500 leading-relaxed">{foto.beschrijving}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── Upload-sectie ── */}
+        <section id="upload" className="mb-16 scroll-mt-20">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold mb-3" style={{ color: 'var(--donkerblauw)', fontFamily: 'Georgia, serif' }}>
+              Upload uw dossier — gratis controle
+            </h2>
+            <p className="text-gray-500 max-w-lg mx-auto text-sm">
+              Sleep uw PDF-dossier hieronder of klik om een bestand te kiezen. U ziet direct hoeveel fouten er zijn gevonden.
+            </p>
+          </div>
+
+          <div className="max-w-2xl mx-auto">
+            {/* Privacy-akkoord */}
+            <div
+              className={`rounded-xl p-5 mb-5 border ${privacyFout ? 'border-red-400 bg-red-50' : 'border-gray-200 bg-white'}`}
+            >
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={privacyAkkoord}
+                  onChange={(e) => { setPrivacyAkkoord(e.target.checked); setPrivacyFout(false); }}
+                  className="mt-1 w-4 h-4 accent-blue-600 flex-shrink-0"
+                />
+                <span className="text-sm text-gray-700 leading-relaxed">
+                  Ik ga akkoord met de{' '}
+                  <Link href="/privacy" className="underline font-medium" style={{ color: 'var(--middenblauw)' }}>
+                    privacyverklaring
+                  </Link>
+                  . Ik begrijp dat mijn dossier persoonsgegevens kan bevatten en geef toestemming voor de verwerking hiervan uitsluitend ten behoeve van de analyse van mijn adviesrapport. Het PDF-bestand wordt na analyse niet permanent bewaard.
+                </span>
+              </label>
+              {privacyFout && (
+                <p className="text-red-600 text-xs mt-3 font-medium">
+                  U dient akkoord te gaan met de privacyverklaring voordat u een dossier kunt uploaden.
+                </p>
+              )}
+            </div>
+
+            {/* Drop-zone */}
+            <div
+              onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
+              onDragLeave={() => setIsDragOver(false)}
+              onDrop={handleDrop}
+              onClick={handleUploadClick}
+              className={`border-2 border-dashed rounded-2xl p-14 text-center cursor-pointer transition-all ${
+                isDragOver
+                  ? 'border-blue-400 bg-blue-50'
+                  : privacyAkkoord
+                  ? 'border-gray-300 hover:border-blue-400 hover:bg-gray-50'
+                  : 'border-gray-200 bg-gray-50 opacity-60'
+              }`}
+            >
+              <input ref={fileInputRef} type="file" accept=".pdf" className="hidden" onChange={handleChange} />
+              <div className="text-5xl mb-4">📂</div>
+              <p className="font-semibold text-lg" style={{ color: 'var(--donkerblauw)' }}>
+                Sleep uw PDF hier naartoe of klik om te kiezen
+              </p>
+              <p className="text-sm text-gray-400 mt-2">Alleen PDF-bestanden — uw dossier blijft vertrouwelijk</p>
+            </div>
+
+            {fout && (
+              <div className="bg-red-50 border border-red-200 rounded-xl p-4 mt-4 text-red-700 text-sm text-center">
+                {fout}
+              </div>
+            )}
+
+            <p className="text-center text-xs text-gray-400 mt-4">
+              🔒 Beveiligd verstuurd · Versleuteld · Niet gedeeld met derden
+            </p>
+          </div>
+        </section>
+
+        {/* ── Lerend systeem ── */}
+        <section
+          className="rounded-xl p-6 mb-16 text-sm"
+          style={{ backgroundColor: 'var(--donkerblauw)', color: 'rgba(255,255,255,0.85)' }}
+        >
+          <div className="max-w-3xl mx-auto text-center">
+            <div className="text-2xl mb-3">🧠</div>
+            <p>
+              <span className="font-semibold text-white">Lerend systeem:</span> Onze tool onthoudt eenheidsprijzen uit eerder geanalyseerde dossiers, zodat ook schades die ten onrechte zijn afgewezen toch een betrouwbare schatting van de gemiste vergoeding krijgen — zelfs als er in uw eigen dossier geen vergelijkbare post staat.
+            </p>
+          </div>
+        </section>
+
+        {/* ── FAQ ── */}
+        <section className="mb-10">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold mb-3" style={{ color: 'var(--donkerblauw)', fontFamily: 'Georgia, serif' }}>
+              Veelgestelde vragen
+            </h2>
+          </div>
+          <div className="max-w-3xl mx-auto space-y-3">
+            {FAQ.map((item, i) => (
+              <div key={i} className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+                <button
+                  className="w-full text-left px-6 py-4 flex justify-between items-center gap-3 hover:bg-gray-50 transition cursor-pointer"
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                >
+                  <span className="font-semibold text-sm" style={{ color: 'var(--donkerblauw)' }}>{item.vraag}</span>
+                  <span className="text-gray-400 flex-shrink-0 text-lg">{openFaq === i ? '−' : '+'}</span>
+                </button>
+                {openFaq === i && (
+                  <div className="px-6 pb-5 text-sm text-gray-600 leading-relaxed border-t border-gray-100 pt-4">
+                    {item.antwoord}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+
       </main>
       <Footer />
     </div>

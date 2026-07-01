@@ -77,13 +77,21 @@ ongeacht hoeveel wanden), moet de GEHELE ruimte (alle wanden van dezelfde kleur)
   er voor de gehele ruimte sauswerk is gecalculeerd, is dit een fout.
 
 REGEL 2 — TEGELWERK
-Bij gescheurde tegels wordt in principe de GEHELE WAND opnieuw betegeld (incl. sanitair de- en
-hermonteren).
-- Uitzondering alleen geldig als het dossier EXPLICIET vermeldt dat er bewijs is geleverd: een
-  foto van tegels op voorraad, OF een screenshot van verkrijgbaarheid.
-- Als er geen bewijs in het dossier staat vermeld, maar er toch alleen losse tegels zijn
-  gecalculeerd in plaats van de gehele wand, is dit een fout.
-- Bij niet meer verkrijgbare of te sterk verkleurde tegels: gehele badkamer herbetegelen.
+Bij gescheurde tegels gelden de volgende regels (conform herstelmatrix B110):
+- Tegels NOG VERKRIJGBAAR → gehele wand opnieuw betegelen (inclusief sanitair de- en
+  hermonteren). Dit is altijd de standaard als verkrijgbaarheid niet expliciet is weersproken.
+- Tegelwand JONGER DAN 5 JAAR, tegels NIET verkrijgbaar → wand(en) met beschadigde tegels
+  voorzien van nieuwe tegels (gehele wand).
+- Tegelwand JONGER DAN 10 JAAR, tegels NIET verkrijgbaar → wand(en) met scheuren voorzien van
+  nieuwe tegels (gehele wand).
+- Tegelwand OUDER DAN 10 JAAR, tegels NIET verkrijgbaar → spot repair is dan toegestaan.
+Fout = het dossier calculeert alleen losse tegelvervanging (spot repair) terwijl:
+  a) er geen bewijs van niet-verkrijgbaarheid in het dossier staat vermeld, OF
+  b) de tegelwand jonger is dan 10 jaar en de tegels niet verkrijgbaar zijn (dan alsnog gehele
+     wand), OF
+  c) de tegelwand jonger is dan 5 jaar (dan gehele wand, ook als andere tegels beschikbaar zijn).
+Controleer altijd of het sanitair de- en hermontage (VZ-BI-011) is meegenomen bij wand-
+herbetegeling — dit is verplicht en ontbreekt regelmatig.
 
 REGEL 3 — METSELWERK: SCHEURLENGTE NAAR OPPERVLAKTE
 Scheurlengte in m1 wordt omgerekend naar herstelomvang in m2 met de formule: m1 ÷ 2 = m2 (bij
@@ -149,8 +157,9 @@ Gebruik de overzichtsfoto van de ruimte/wand die bij de schade hoort (niet de cl
 de scheur zelf) om dit te beoordelen.
 
 REGEL 7 — STUCLOPER
-- Stucloper is verplicht bij herstel met stucwerk, spackwerk of sierpleister (wand of plafond) —
-  nooit bij kale sauswerk of behang.
+- Stucloper (herstelmatrix VZ-BI-030, eenheid m²) is verplicht bij herstel met stucwerk,
+  spackwerk of sierpleister (wand of plafond) — NOOIT bij alleen sauswerk of behang.
+  De herstelmatrix omschrijft dit expliciet als "Exclusief sauswerk".
 - Hoeveelheid:
   * Bij wandherstel: de BREEDTE van de wand met schade in m1 (gemeten langs de vloer). Als
     meerdere wanden in dezelfde ruimte stucwerk/spackwerk/sierpleister hebben, tel dan de
@@ -295,6 +304,38 @@ TOEPASSING — controleer voor elke afgewezen schade (code X of conclusie D/G/A/
 5. Schades met code B/T/V (toegekend) hoef je niet te controleren op deze regel — focus
    uitsluitend op afgewezen schades (code X, conclusie D, G, A of O).
 
+REGEL 11 — VERPLICHTE VOORZIENINGEN PER HERSTELTYPE (HERSTELMATRIX)
+De herstelmatrix schrijft voor welke voorzieningen (VZ-BI-*) verplicht zijn per type herstelwerk.
+Controleer per schade of de verplichte voorzieningen aanwezig zijn in de calculatie:
+
+Bij STUCWERK/SPACKWERK/SIERPLEISTER op een WAND (B104 of gelijkwaardig):
+  → VZ-BI-010 Meubels verplaatsen: verplicht als er meubels vóór de wand staan (zie REGEL 6)
+  → VZ-BI-030 Stucloper (m²): verplicht (zie REGEL 7 — "Exclusief sauswerk")
+  → VZ-BI-004/021 Radiator de-/hermonteren: verplicht als radiator op die wand hangt
+  → VZ-BI-003 Gordijnrails de-/hermonteren: verplicht als gordijnrails op die wand
+
+Bij STUCWERK/SPACKWERK/SIERPLEISTER op het PLAFOND:
+  → VZ-BI-010 Meubels verplaatsen: ALTIJD verplicht (1 post per ruimte)
+  → VZ-BI-012 Plafondarmaturen de-/hermonteren: verplicht als er verlichtingsarmaturen zijn
+  → VZ-BI-030 Stucloper (m²): verplicht, berekend over het vloeroppervlak (zie REGEL 7)
+
+Bij TEGELWERK (B110):
+  → VZ-BI-011 Sanitair de-/hermonteren: verplicht als sanitair (toilet, wastafel, douche) op
+    de te betegelen wand staat
+
+Bij STEIGERWERK (REGEL 5 — hoogte ≥ 2,5m):
+  → VZ-BI-007 Rolsteiger: verplicht (zie REGEL 5)
+
+Aanvullende voorzieningen uit de matrix:
+  → VZ-BI-020 Toeslag trapgat: verplicht bij werkzaamheden in het trapgat (zie REGEL 8)
+  → VZ-BI-019 Wasmachine/droger verplaatsen: verplicht als het apparaat de werkruimte blokkeert
+  → VZ-BI-022 Opbouwelektraleidingen de-/hermonteren: verplicht als opbouwleidingen op de
+    te herstellen wand/het plafond zijn aangebracht
+
+BELANGRIJK: Meld alleen ONTBREKENDE voorzieningen die in het nadeel van de aanvrager zijn
+(= gemiste vergoeding). Meld nooit dat een post ten onrechte is opgenomen — dat schaadt de
+aanvrager. Bij twijfel over aanwezigheid, niet melden.
+
 FINANCIËLE IMPACT BEREKENEN — VERPLICHTE METHODE
 Voor elke fout waarbij een ontbrekende hoeveelheid of post is geconstateerd (bijvoorbeeld extra
 m2 sauswerk, extra m2 spackwerk, extra stucloper, een ontbrekende rolsteiger-post, etc.) MOET je
@@ -354,7 +395,8 @@ Antwoord UITSLUITEND met geldige JSON in dit exacte formaat, zonder uitleg eromh
     {"naam": "Stucloper", "aantal": <getal>},
     {"naam": "Trapgat-toeslag", "aantal": <getal>},
     {"naam": "Bouwkundige staat (gevoeligheid)", "aantal": <getal>},
-    {"naam": "Afgewezen schades vs. trillingsgrenswaarden", "aantal": <getal>}
+    {"naam": "Afgewezen schades vs. trillingsgrenswaarden", "aantal": <getal>},
+    {"naam": "Verplichte voorzieningen (VZ-BI)", "aantal": <getal>}
   ],
   "kritieke_bevindingen": [
     {

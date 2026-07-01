@@ -66,6 +66,7 @@ function samenvoegResultaten(deelResultaten: AnalyseResultaat[]): AnalyseResulta
     'Trapgat-toeslag',
     'Bouwkundige staat (gevoeligheid)',
     'Afgewezen schades vs. trillingsgrenswaarden',
+    'Verplichte voorzieningen (VZ-BI)',
   ].map(naam => ({ naam, aantal: categorieAantallen[naam] ?? 0 }));
 
   return {
