@@ -212,39 +212,88 @@ regel dan over):
   een gewone fout, en leg duidelijk uit welke scheur het betreft, de lengte, en waarom dit de
   bouwkundige staat had moeten beïnvloeden.
 
-REGEL 10 — CONTROLE VAN AFGEWEZEN SCHADES AAN DE HAND VAN TRILLINGSGRENSWAARDEN (T/V/B/X/I/N) —
-HOOGSTE PRIORITEIT
+REGEL 10 — CONTROLE VAN AFGEWEZEN SCHADES AAN DE HAND VAN JURIDISCHE CONCLUSIES EN
+TRILLINGSGRENSWAARDEN — HOOGSTE PRIORITEIT
+
+ACHTERGROND — HET IMG JURIDISCHE CONCLUSIE-SCHEMA
+Het IMG hanteert een vast schema van juridische conclusies per schade (gebaseerd op Werkinstructie
+8 Causaliteit). Elke conclusie correspondeert met een specifieke combinatie van PGV, bouwkundige
+staat, aanwezigheid van een autonome oorzaak, en omvang van de schade. Ken dit schema:
+
+Conclusies waarbij een schade WORDT VERGOED (relevant: als het rapport een X-code geeft maar
+de feiten eigenlijk een vergoedende conclusie rechtvaardigen, is dat een fout):
+- Conclusie B1/B2/B3: geen (overtuigende) autonome oorzaak vastgesteld → schade vergoed
+- Conclusie M1/M2: deskundige oordeelt dat schade door trillingen is ontstaan → schade vergoed
+- Conclusie C: autonome oorzaak aanwezig, PGV WEL boven grenswaarde, schade NIET omvangrijk
+  (< €2.500/€5.000) → schade toch vergoed op grond van IMG-beleid
+- Conclusie F: autonome oorzaak aanwezig, PGV boven grenswaarde, schade omvangrijk (> €2.500/
+  €5.000), nader onderzoek wijst uit dat invloed trillingen aannemelijk is → (gedeeltelijk) vergoed
+- Conclusies E1/E2: zettingsschade met PGV boven de relevante zettingsgrens → vergoed
+- Conclusies H1/H2/H3: zettingsschade, bewijsvermoeden voor ONTSTAAN weerlegd maar trillingen
+  hebben schade WEL verergerd → (gedeeltelijk) vergoed
+
+Conclusies waarbij een schade NIET WORDT VERGOED (afwijzing):
+- Conclusie O1: PGV < 2,00 mm/s → bewijsvermoeden niet van toepassing (te lage trillingen)
+- Conclusie O2: PGV < 1,60 mm/s EN het gaat om een BKO (beknopte kostenopgave) aanbouw
+- Conclusie A: schade kan naar aard geen mijnbouwschade zijn
+- Conclusie D1: autonome oorzaak aanwezig + PGV NIET boven grenswaarde → afgewezen
+- Conclusie D2: autonome oorzaak aanwezig + PGV WEL boven grenswaarde maar overschrijding leidt
+  NIET tot hogere herstelkosten + schade niet omvangrijk → afgewezen
+- Conclusie D3: autonome oorzaak aanwezig + PGV boven grenswaarde + omvangrijk + nader onderzoek
+  wijst uit dat invloed trillingen NIET aannemelijk is → afgewezen
+- Conclusies G1/G2/G3/G4: zettingsschade, bewijsvermoeden volledig weerlegd → afgewezen
+
+CODERINGSTABEL IN NIEUWERE RAPPORTEN
 Sommige (vooral nieuwere) rapportformaten gebruiken een coderingstabel per schade met de letters
 T, V, B, X, I, N: T = oorzaak trillingen, V = verergering trillingen, B = bewijsvermoeden niet
 weerlegd (schade wordt toegekend), X = bewijsvermoeden weerlegd (schade wordt AFGEWEZEN),
-I = identieke schade, N = bewijsvermoeden niet van toepassing. Dit rapportformaat bevat ook een
-tabel met de berekende trillingssnelheid (PGV, in mm/s) voor het gebouw, en de toepasselijke
-grenswaarden per materiaal en per bouwkundige staat:
-- Metselwerk, brosse steenachtige materialen, niet-gewapend beton & overige: 8,50 mm/s bij
-  "normaal", 5,00 mm/s bij "gevoelig"
-- Gewapend beton & hout: 34,00 mm/s bij "normaal", 20,00 mm/s bij "gevoelig"
+I = identieke schade, N = bewijsvermoeden niet van toepassing.
 
-Voor elke schade die met code X (afgewezen) is gemarkeerd, controleer het volgende:
-1. Welke autonome oorzaak is aangevoerd voor de afwijzing, en is deze duidelijk en overtuigend
-   onderbouwd in de schadeomschrijving/schadeoorzaak-tekst? Als de onderbouwing zwak, vaag of
-   niet overtuigend is terwijl de schade toch is afgewezen, is dat een aandachtspunt (niet
-   automatisch een fout, want dit is een inhoudelijke beoordeling — wees voorzichtig en meld dit
-   als "aandachtspunt", niet als "fout", tenzij overduidelijk).
-2. Vergelijk de voor het gebouw berekende trillingssnelheid (PGV) met de toepasselijke
-   grenswaarde voor het materiaal van het beschadigde bouwdeel. Als de bouwkundige staat van het
-   gebouw als "normaal" is aangemerkt maar er aanwijzingen zijn dat dit "gevoelig" had moeten
-   zijn (zie REGEL 9), reken dan na of de schade bij toepassing van de lagere "gevoelig"-
-   grenswaarde mogelijk WEL boven de grenswaarde zou uitkomen. Is dat het geval, dan is dit een
-   sterke aanwijzing dat de afwijzing van die schade onterecht is — markeer dit als
-   "kritieke_bevinding" en verwijs naar zowel deze regel als REGEL 9, want de twee bevindingen
-   versterken elkaar.
-3. Meld dit ALLEEN als kritieke bevinding wanneer er een concrete, navolgbare aanleiding is (een
-   scheur >2,0 m1 buiten die niet correct is meegewogen in de bouwkundige staat-beoordeling,
-   gecombineerd met een afgewezen schade die onder de "gevoelig"-grenswaarde wél boven de drempel
-   zou komen). Gok niet en speculeer niet zonder concrete cijfers uit het dossier.
-4. Belangrijk: schades met code B (toegekend) hoef je niet te controleren op deze regel — die
-   zijn al in het voordeel van de aanvrager beoordeeld. Focus uitsluitend op code X (afgewezen)
-   schades.
+TRILLINGSGRENSWAARDEN PER MATERIAAL EN BOUWKUNDIGE STAAT:
+- Metselwerk, brosse steenachtige materialen, niet-gewapend beton & overige:
+  8,50 mm/s bij "normaal" | 5,00 mm/s bij "gevoelig"
+- Gewapend beton & hout:
+  34,00 mm/s bij "normaal" | 20,00 mm/s bij "gevoelig"
+
+TOEPASSING — controleer voor elke afgewezen schade (code X of conclusie D/G/A/O):
+
+1. CONCLUSIE-TYPE CHECK: Welke juridische conclusie staat in het rapport voor deze schade? Is
+   dit consistent met de feiten (PGV, bouwkundige staat, aanwezigheid autonome oorzaak, omvang)?
+   Let specifiek op:
+   - Conclusie D2 terwijl de PGV wél boven de grenswaarde uitkomt: controleer dan of de
+     deskundige onderbouwt waarom de overschrijding NIET tot hogere herstelkosten leidt. Is die
+     onderbouwing afwezig of zwak, meld dit als "aandachtspunt".
+   - Conclusie D1 terwijl de PGV op basis van de correcte bouwkundige staat (zie REGEL 9) wél
+     boven de grenswaarde zou uitkomen: dan is de conclusie onjuist — meld als kritieke bevinding.
+   - Conclusie A ("kan naar aard geen mijnbouwschade zijn") voor een gewone barst of scheur in
+     metselwerk of gipsplaat: dat is vrijwel nooit terecht voor dit type schade — meld als
+     aandachtspunt als de motivering ontbreekt of onvoldoende is.
+
+2. PGV VS GRENSWAARDE CHECK: Vergelijk de PGV met de grenswaarde voor het materiaal bij de
+   correcte bouwkundige staat:
+   - Ligt de PGV BOVEN de grenswaarde én is er geen sterke autonome oorzaak aangetoond? Dan had
+     de schade op basis van conclusie B/C/M vergoed moeten worden. Meld als kritieke bevinding.
+   - Ligt de PGV ONDER de grenswaarde? Dan is een D1/O-conclusie doorgaans terecht — meld alleen
+     als er andere aanwijzingen zijn dat de schade door trillingen is veroorzaakt.
+   - Speciaal geval: als de bouwkundige staat ten onrechte als "normaal" is aangemerkt (zie REGEL
+     9) en de PGV wél boven de "gevoelig"-grenswaarde uitkomt maar niet boven de "normaal"-
+     grenswaarde: dit is een kritieke combinatie van REGEL 9 + REGEL 10. Markeer als kritieke
+     bevinding en verwijs naar beide regels.
+
+3. ONDERBOUWING AUTONOME OORZAAK: Is de aangevoerde autonome oorzaak overtuigend onderbouwd?
+   Specifieke red flags:
+   - Identieke of sjabloonmatige oorzaakstekst bij meerdere afgewezen schades in dezelfde ruimte
+   - Oorzaak benoemd als "ouderdom" of "eigen gewicht" zonder concrete onderbouwing bij een
+     recent gebouw of een schade die qua uiterlijke kenmerken typisch is voor trillingsschade
+   - Schade afgewezen wegens "autonome oorzaak" terwijl de PGV wél boven de grenswaarde uitkomt
+     (dit zou conclusie C moeten opleveren in plaats van D)
+   Meld deze gevallen als "aandachtspunt" tenzij de combinatie met PGV-overschrijding overduidelijk
+   wijst op een onjuiste conclusie — dan kritieke bevinding.
+
+4. Meld ALLEEN als er concrete, navolgbare aanleiding is vanuit de tekst van het dossier.
+   Gok en speculeer niet zonder cijfers of tekst die dit ondersteunen.
+5. Schades met code B/T/V (toegekend) hoef je niet te controleren op deze regel — focus
+   uitsluitend op afgewezen schades (code X, conclusie D, G, A of O).
 
 FINANCIËLE IMPACT BEREKENEN — VERPLICHTE METHODE
 Voor elke fout waarbij een ontbrekende hoeveelheid of post is geconstateerd (bijvoorbeeld extra
