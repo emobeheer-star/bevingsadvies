@@ -354,7 +354,7 @@ export default function HomePage() {
           <div className="hidden md:grid grid-cols-2 gap-3">
             {[
               { src: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80', alt: 'Scheur in muur door aardbevingsschade' },
-              { src: 'https://images.unsplash.com/photo-1503652601-557dc9af0f4a?w=400&q=80', alt: 'Beschadigde woning Groningen' },
+              { src: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400&q=80', alt: 'Woning Groningen' },
               { src: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&q=80', alt: 'Herstelwerkzaamheden aan woning' },
               { src: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&q=80', alt: 'Aardbevingsschade controlerapport' },
             ].map((foto, i) => (
