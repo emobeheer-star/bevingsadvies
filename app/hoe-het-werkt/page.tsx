@@ -20,9 +20,9 @@ const STAPPEN = [
   },
   {
     nummer: '2',
-    titel: 'AI-analyse van uw rapport',
-    tekst: "Onze tool leest het volledige dossier en vergelijkt het systematisch met de officiële herstelmatrix van het IMG, de juridische conclusieschema’s en de bekende eenheidsprijzen uit vergelijkbare dossiers in dezelfde regio.",
-    detail: 'Wij controleren alle schadeposten op stucloper, sauswerk, steigerwerk, tegelwerk, meubels en objecten op foto, trapgat-toeslagen en juridische conclusies op basis van de PGV-waarden en bouwkundige staat.',
+    titel: 'Diepgaande analyse van uw rapport',
+    tekst: 'Onze tool leest het volledige dossier en toetst het aan de geldende regels en normen voor schadeherstel. Wij vergelijken hoeveelheden, tarieven, foto-inhoud en juridische conclusies — systematisch en volledig.',
+    detail: 'De analyse combineert sectorkennis, actuele officiële documentatie en ervaringsdata uit eerder beoordeelde dossiers. Daardoor worden ook subtiele en minder voor de hand liggende fouten gevonden.',
     foto: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80',
     fotoAlt: 'AI-analyse van schaderapporten',
   },
@@ -36,14 +36,6 @@ const STAPPEN = [
   },
 ];
 
-const REGELS = [
-  { code: 'REGEL 1', omschrijving: 'Sauswerk & spackwerk — ruimteniveau', uitleg: 'Sauswerk wordt per hele ruimte berekend, niet per wand afzonderlijk. Te lage m²-berekening is de meest voorkomende fout.' },
-  { code: 'REGEL 2', omschrijving: 'Tegelwerk — leeftijdsgebonden regels', uitleg: 'Als tegels nog verkrijgbaar zijn, moet de gehele wand herbetegeld worden. Losse tegelvervanging is alleen toegestaan bij wanden ouder dan 10 jaar met niet-verkrijgbare tegels.' },
-  { code: 'REGEL 5', omschrijving: 'Steigerwerk vanaf 2,5 meter', uitleg: 'Bij werkzaamheden op 2,5 meter of hoger is een rolsteiger verplicht. Ontbreekt deze post vaak in dossiers met hoge ruimten of trappenhuizen.' },
-  { code: 'REGEL 7', omschrijving: 'Stucloper — verplicht bij stucwerk', uitleg: 'Stucloper is verplicht bij alle stuc-, spack- en sierpleisterwerk. Berekend over de breedte van de wand; bij plafondwerk over het volledige vloeroppervlak.' },
-  { code: 'REGEL 9', omschrijving: 'Bouwkundige staat — gevoeligheidsklasse', uitleg: 'Een onjuiste gevoeligheidsklasse kan ertoe leiden dat alle schades ten onrechte worden afgewezen. Dit is de meest impactvolle fout.' },
-  { code: 'REGEL 10', omschrijving: 'Juridische conclusies (O1/O2/A t/m H)', uitleg: 'Wij toetsen of de juridische conclusie past bij de gemeten PGV-waarden, de bouwkundige staat en de aard van de schade.' },
-];
 
 export default function HoeHetWerktPage() {
   return (
@@ -92,31 +84,38 @@ export default function HoeHetWerktPage() {
           ))}
         </section>
 
-        {/* Welke regels */}
+        {/* Wat maakt onze controle anders */}
         <section className="mb-16">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold mb-3" style={{ color: 'var(--donkerblauw)', fontFamily: 'Georgia, serif' }}>
-              Welke herstelregels controleren wij?
+              Wat maakt onze controle betrouwbaar?
             </h2>
             <p className="text-gray-500 text-sm max-w-xl mx-auto">
-              Onze controle is gebaseerd op de officiële herstelmatrix, de Werkinstructie Causaliteit (v2.1) en de geldende berekeningsregels van het IMG.
+              Onze analyse is opgebouwd uit jaren kennis van het IMG-schadeherstelproces, gecombineerd met de meest recente officiële documentatie.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {REGELS.map((regel) => (
-              <div key={regel.code} className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
-                <div className="flex items-start gap-3">
-                  <span
-                    className="text-xs font-bold px-2 py-1 rounded flex-shrink-0 mt-0.5"
-                    style={{ backgroundColor: 'var(--donkerblauw)', color: 'white' }}
-                  >
-                    {regel.code}
-                  </span>
-                  <div>
-                    <p className="font-semibold text-sm mb-1" style={{ color: 'var(--donkerblauw)' }}>{regel.omschrijving}</p>
-                    <p className="text-xs text-gray-500 leading-relaxed">{regel.uitleg}</p>
-                  </div>
-                </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {[
+              {
+                titel: 'Diepgaande sectorkennis',
+                tekst: 'Onze controlelogica is ontwikkeld op basis van honderden dossiers en diepgaande kennis van hoe het IMG schades berekent en beoordeelt. Wij weten precies waar fouten ontstaan.',
+              },
+              {
+                titel: 'Actuele regelgeving',
+                tekst: 'Wij werken altijd met de meest recente versies van de officiele IMG-documentatie. Wijzigingen in berekeningsregels worden direct verwerkt.',
+              },
+              {
+                titel: 'Lerend systeem',
+                tekst: 'Elk geanalyseerd dossier maakt onze tool scherper. Prijzen, patronen en afwijkingen worden anoniem opgeslagen en verbeteren de nauwkeurigheid van toekomstige analyses.',
+              },
+              {
+                titel: 'Alleen in uw voordeel',
+                tekst: 'Wij rapporteren uitsluitend bevindingen die u geld opleveren. Wat u tekort bent gekomen staat centraal — niet wat u misschien te veel heeft gekregen.',
+              },
+            ].map((item) => (
+              <div key={item.titel} className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                <h3 className="font-bold text-base mb-2" style={{ color: 'var(--donkerblauw)' }}>{item.titel}</h3>
+                <p className="text-sm text-gray-600 leading-relaxed">{item.tekst}</p>
               </div>
             ))}
           </div>

@@ -15,12 +15,12 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 const CONTROLE_TEGELS = [
-  { icon: Ruler, titel: 'Juiste herstelomvang', tekst: 'Per schadepost beoordelen wij of de omvang van het herstel overeenkomt met de geldende herstelregels (stucloper, sauswerk, steigertoeslag, etc.).' },
-  { icon: Camera, titel: "Foto's vs. calculatie", tekst: "Wij vergelijken overzichtsfoto's met de begroting: radiatoren, meubels, armaturen en andere objecten die herstelkosten verhogen." },
-  { icon: Scale, titel: 'Juridische conclusies', tekst: 'Wij toetsen of de conclusie (O1/O2, A t/m H) past bij de gemeten PGV-waarden en de bouwkundige staat van uw woning.' },
-  { icon: Home, titel: 'Bouwkundige staat', tekst: 'Een onjuiste classificatie van uw woning kan ertoe leiden dat alle schades ten onrechte worden afgewezen. Wij controleren dit specifiek.' },
-  { icon: Euro, titel: 'Tarieven & eenheidsprijzen', tekst: 'Wij toetsen of de gehanteerde prijzen en eenheden overeenkomen met de normen voor schadeherstel in uw dossier.' },
-  { icon: ClipboardList, titel: 'Volledigheid dossier', tekst: 'Zijn alle gemelde schades ook opgenomen en doorgerekend? Ontbrekende posten zijn de meest voorkomende oorzaak van gemiste vergoeding.' },
+  { icon: Ruler, titel: 'Herstelomvang per schade', tekst: 'Wij beoordelen per schadepost of de omvang en hoeveelheden correct zijn berekend volgens de geldende normen.' },
+  { icon: Camera, titel: "Visuele verificatie", tekst: "Wij vergelijken de foto's in uw dossier met de bijbehorende calculatieposten en signaleren discrepanties." },
+  { icon: Scale, titel: 'Juridische beoordeling', tekst: 'De juridische conclusie in uw dossier wordt getoetst aan de geldende criteria. Een onjuiste conclusie kan grote financiële gevolgen hebben.' },
+  { icon: Home, titel: 'Gebouweigenschappen', tekst: 'Kenmerken van uw woning spelen een cruciale rol in de berekening. Een onjuiste invoer hier raakt alle schades tegelijk.' },
+  { icon: Euro, titel: 'Tarieven & vergoedingen', tekst: 'Wij toetsen of de gehanteerde bedragen en eenheden aansluiten bij wat in uw specifieke situatie van toepassing is.' },
+  { icon: ClipboardList, titel: 'Volledigheid', tekst: 'Zijn alle gemelde schades ook daadwerkelijk meegenomen en doorgerekend? Wat ontbreekt, kost u geld.' },
 ];
 
 const STAPPEN_ANALYSE = [
