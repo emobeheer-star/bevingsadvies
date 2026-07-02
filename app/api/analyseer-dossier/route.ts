@@ -205,7 +205,12 @@ export async function POST(request: NextRequest) {
     // Alle foto-pagina's renderen zonder vast maximum
     const alleFotos = await renderFotoPaginasNaarImages(buffer, Infinity);
 
-    const prijzengeheugen = await getPrijzengeheugen();
+    let prijzengeheugen: Record<string, number> = {};
+    try {
+      prijzengeheugen = await getPrijzengeheugen();
+    } catch (dbErr) {
+      console.warn('Prijzengeheugen niet beschikbaar (DB niet geconfigureerd):', (dbErr as Error).message);
+    }
     const prijzenTekst = Object.keys(prijzengeheugen).length > 0
       ? `\n\nBEKENDE EENHEIDSPRIJZEN UIT EERDER GEANALYSEERDE DOSSIERS:\n${Object.entries(prijzengeheugen)
           .map(([k, v]) => `- ${k}: €${v} per eenheid (incl. BTW)`)
@@ -248,13 +253,21 @@ export async function POST(request: NextRequest) {
 
     const resultaat = chunks.length === 1 ? chunkDeelResultaten[0] : samenvoegResultaten(chunkDeelResultaten);
 
-    if (resultaat.gevonden_eenheidsprijzen && Object.keys(resultaat.gevonden_eenheidsprijzen).length > 0) {
-      const vandaag = new Date().toISOString().slice(0, 10);
-      await slaEenheidsprijzenOp(resultaat.gevonden_eenheidsprijzen, vandaag);
+    try {
+      if (resultaat.gevonden_eenheidsprijzen && Object.keys(resultaat.gevonden_eenheidsprijzen).length > 0) {
+        const vandaag = new Date().toISOString().slice(0, 10);
+        await slaEenheidsprijzenOp(resultaat.gevonden_eenheidsprijzen, vandaag);
+      }
+    } catch (dbErr) {
+      console.warn('Eenheidsprijzen opslaan mislukt (DB niet geconfigureerd):', (dbErr as Error).message);
     }
 
     const analyseId = uuidv4();
-    await slaAnalyseOp(analyseId, file.name, JSON.stringify(resultaat));
+    try {
+      await slaAnalyseOp(analyseId, file.name, JSON.stringify(resultaat));
+    } catch (dbErr) {
+      console.warn('Analyse opslaan mislukt (DB niet geconfigureerd):', (dbErr as Error).message);
+    }
 
     return Response.json({
       analyseId,
