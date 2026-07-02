@@ -94,7 +94,7 @@ export default function HomePage() {
     const interval = setInterval(() => {
       stap++;
       if (stap < STAPPEN_ANALYSE.length - 1) setStapIndex(stap);
-    }, 3000);
+    }, 18000);
 
     try {
       const formData = new FormData();
@@ -163,7 +163,7 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
-            <p className="mt-8 text-sm opacity-60">Dit kan 30–90 seconden duren afhankelijk van de omvang van het dossier.</p>
+            <p className="mt-8 text-sm opacity-60">Dit duurt gemiddeld 1–3 minuten afhankelijk van de omvang van het dossier. Verlaat deze pagina niet.</p>
           </div>
         </main>
         <Footer />

@@ -203,7 +203,7 @@ export async function POST(request: NextRequest) {
     const chunks = gebruikChunking ? splitInChunks(volledigeTekst) : [volledigeTekst];
 
     // Alle foto-pagina's renderen zonder vast maximum
-    const alleFotos = await renderFotoPaginasNaarImages(buffer, Infinity);
+    const alleFotos = await renderFotoPaginasNaarImages(buffer, 25);
 
     let prijzengeheugen: Record<string, number> = {};
     try {
