@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { Scale, ClipboardList, Lock, Target } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import type { Metadata } from 'next';
@@ -11,22 +12,22 @@ export const metadata: Metadata = {
 
 const WAARDEN = [
   {
-    icon: '⚖️',
+    icon: Scale,
     titel: 'Volledig onafhankelijk',
     tekst: 'Wij zijn niet gelieerd aan het IMG, aannemers of andere partijen in het schadeherstelproces. Ons enige belang is het belang van de eigenaar.',
   },
   {
-    icon: '📋',
+    icon: ClipboardList,
     titel: 'Gebaseerd op officiële regelgeving',
     tekst: 'Onze controles zijn gebaseerd op de officiële herstelmatrix (versie D71), de Werkinstructie Causaliteit (versie 2.1) en de geldende IMG-berekeningsregels.',
   },
   {
-    icon: '🔒',
+    icon: Lock,
     titel: 'Vertrouwelijk & AVG-conform',
     tekst: 'Uw dossier bevat persoonsgegevens. Wij verwerken deze uitsluitend voor de analyse en verwijderen het PDF-bestand daarna. Zie onze privacyverklaring.',
   },
   {
-    icon: '🎯',
+    icon: Target,
     titel: 'Alleen in uw voordeel',
     tekst: 'Wij rapporteren uitsluitend fouten die u geld kosten — niet fouten die u zouden benadelen als het IMG ze zou zien. Uw belang staat centraal.',
   },
@@ -85,10 +86,10 @@ export default function OverOnsPage() {
             {WAARDEN.map((waarde) => (
               <div key={waarde.titel} className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
                 <div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-4"
+                  className="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
                   style={{ backgroundColor: '#EEF4FF' }}
                 >
-                  {waarde.icon}
+                  <waarde.icon className="w-6 h-6" style={{ color: 'var(--middenblauw)' }} />
                 </div>
                 <h3 className="font-bold text-base mb-2" style={{ color: 'var(--donkerblauw)' }}>{waarde.titel}</h3>
                 <p className="text-sm text-gray-600 leading-relaxed">{waarde.tekst}</p>
