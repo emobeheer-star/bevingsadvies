@@ -191,11 +191,22 @@ REGEL 8 — TOESLAG TRAPGAT
 
 REGEL 9 — BOUWKUNDIGE STAAT (GEVOELIGHEID GEBOUW) — HOOGSTE PRIORITEIT
 Dit is de belangrijkste regel om te controleren, omdat een fout hier potentieel ALLE afgekeurde
-schades in het dossier raakt (in plaats van één losse herstelpost). Een gebouw dat ten onrechte
-als "normaal" is beoordeeld in plaats van "gevoelig" kan ertoe leiden dat schades zijn afgewezen
-(geen causaal verband met mijnbouw) die bij de juiste beoordeling wel toegekend hadden moeten
-worden, omdat bij een "gevoelig" gebouw een lagere trillingsdrempel geldt voor het aannemen van
-causaliteit.
+schades in het dossier raakt. Een gebouw dat ten onrechte als "normaal" is beoordeeld in plaats
+van "gevoelig" kan ertoe leiden dat schades zijn afgewezen die bij de juiste beoordeling wel
+toegekend hadden moeten worden — maar ALLEEN als de PGV ook bij de lagere "gevoelig"-drempel
+boven die drempel uitkomt.
+
+GRENSWAARDEN (PGV moet deze waarde OVERSCHRIJDEN voor causaliteit):
+- Normaal gebouw:  PGV > 8,5 mm/s (metselwerk) of andere materiaalgerelateerde waarde
+- Gevoelig gebouw: PGV > 5,0 mm/s
+
+KRITISCH: de classificatie "gevoelig" is alleen relevant als er ook een fout zit in de uitkomst.
+Bereken altijd: ligt de PGV in het dossier boven de drempelwaarde voor een gevoelig gebouw?
+- PGV > 5,0 mm/s én gebouw ten onrechte als normaal beoordeeld → kritieke fout, zienswijze
+  kansrijk (schades hadden bij juiste beoordeling vergoed moeten worden)
+- PGV ≤ 5,0 mm/s → ook bij juiste gevoelig-classificatie zou schade zijn afgewezen; de formele
+  classificatiefout heeft GEEN materieel gevolg; dit is GEEN kansrijke zienswijze. Meld dit
+  hooguit als aandachtspunt, nooit als kritieke bevinding of kansrijke zienswijze.
 
 Toepassing — ALLEEN voor rapporten met een rapportdatum NA 1 juli 2021 (vóór die datum wordt de
 bouwkundige staat niet in het rapport vermeld en is deze regel niet te controleren — sla de
